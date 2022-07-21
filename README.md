@@ -13,5 +13,6 @@ Current API endpoints:
 ```
 /stats/buckets - Number of "bucket" files
 /stats/uptime - its in the name
-/query?hash=<hash/filename> - Query by hash or filename
+/query/hash?hash=<hash> - Query by hash 
+/query/file?file=<file> - Query by file name
 ```

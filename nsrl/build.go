@@ -43,9 +43,9 @@ func GetNSrl() {
 		f, _ := os.OpenFile("lastHash.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 		f.WriteString(latestVersion)
 	}
-
-	_, err = os.Stat("rds_modernm/NSRLFile.txt")
-	if err != nil {
+UnzipStage:
+	_, err = os.Stat("rds_modernm/rds_modernm/NSRLFile.txt")
+	if err != nil || newLink {
 		log.Println("NSRL hash list not found, downloading...")
 		resp, err := http.Get(linkUrl)
 		if err != nil {
@@ -62,8 +62,11 @@ func GetNSrl() {
 		)
 
 		io.Copy(io.MultiWriter(out, bar), resp.Body)
+	} else {
+		log.Println("NSRL hash list found, skipping download")
+		return
 	}
-UnzipStage:
+
 	_, err = os.Stat("rds_modernm")
 	if err != nil || newLink == true {
 		if newLink {

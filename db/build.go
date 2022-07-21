@@ -86,6 +86,7 @@ func (b *BucketCollection) AddNSRL(dbUuid string, nsrlData []string, wg *sync.Wa
 }
 
 func ProcessNSRLtxt(filename string) BucketCollection {
+	startTime := time.Now()
 	bucketNume := 0
 	Buckets := BucketCollection{
 		Uuids:        []string{},
@@ -114,9 +115,13 @@ func ProcessNSRLtxt(filename string) BucketCollection {
 
 	bar.Close()
 	log.Println("Waiting for processing to finish")
-	spinner := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
-	spinner.Start()
+	pgSpinner := spinner.New(spinner.CharSets[9], 100*time.Millisecond)
+	pgSpinner.PostUpdate = func(s *spinner.Spinner) {
+		s.Suffix = "  Load Time: " + time.Since(startTime).String()
+	}
+	pgSpinner.Start()
 	wg.Wait()
-	spinner.Stop()
+	pgSpinner.Stop()
+	log.Println("Processing finished in: ", time.Since(startTime))
 	return Buckets
 }

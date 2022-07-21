@@ -16,3 +16,5 @@ Current API endpoints:
 /query/hash?hash=<hash> - Query by hash 
 /query/file?file=<file> - Query by file name
 ```
+
+Hash queries usually run in sub-second times. File queries may take up to 30 seconds, and may return multiple entries.

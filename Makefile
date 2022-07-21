@@ -1,15 +1,15 @@
 all:
-	mkdir bin
-	GOOS=linux GOARCH=amd64 go build -o bin/nsrlferret
-	GOOS=windows GOARCH=amd64 go build -o bin/nsrlferret.exe
+	[ -d bin ] || mkdir bin
+	GOOS=linux GOARCH=amd64 go build -o bin/nsrlferret -ldflags "-s -w"
+	GOOS=windows GOARCH=amd64 go build -o bin/nsrlferret.exe -ldflags "-s -w"
 
 linux:
-	mkdir bin
-	GOOS=linux GOARCH=amd64 go build -o bin/nsrlferret
+	[ -d bin ] || mkdir bin
+	GOOS=linux GOARCH=amd64 go build -o bin/nsrlferret -ldflags "-s -w"
 
 windows:
-	mkdir bin
-	GOOS=windows GOARCH=amd64 go build -o bin/nsrlferret.exe
+	[ -d bin ] || mkdir bin
+	GOOS=windows GOARCH=amd64 go build -o bin/nsrlferret.exe -ldflags "-s -w"
 
 run:
 	go run .

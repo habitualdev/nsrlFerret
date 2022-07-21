@@ -3,7 +3,6 @@ package db
 import (
 	"bufio"
 	bloomfilter "github.com/alovn/go-bloomfilter"
-	"github.com/bits-and-blooms/bloom/v3"
 	"github.com/briandowns/spinner"
 	progress "github.com/schollz/progressbar/v3"
 	"log"
@@ -29,12 +28,6 @@ type NSRLDataPoint struct {
 	ProductCode  string
 	OpSystemCode string
 	SpecialCode  string
-}
-
-type bucketEntry struct {
-	Bucket *bloom.BloomFilter
-	Type   string
-	UUID   string
 }
 
 func (b *BucketCollection) CheckBloom(hash string) bool {

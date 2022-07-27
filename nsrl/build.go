@@ -15,33 +15,33 @@ import (
 
 func GetNSrl() {
 	linkUrl := "https://s3.amazonaws.com/rds.nsrl.nist.gov/RDS/current/rds_modernm.zip"
-	hashUrl := "https://s3.amazonaws.com/rds.nsrl.nist.gov/RDS/current/version.txt"
+	hashUrl := "htts://s3.amazonaws.com/rds.nsrl.nist.gov/RDS/current/version.txt"
 	newLink := false
 
 	resp, err := http.Get(hashUrl)
 	if err != nil {
 		println(err.Error())
-		os.Exit(1)
-	}
-	versionData, _ := io.ReadAll(resp.Body)
-	latestVersion := strings.Replace(strings.Split(strings.Split(string(versionData), "\n")[4], ",")[0], "\"", "", -1)
+	} else {
+		versionData, _ := io.ReadAll(resp.Body)
+		latestVersion := strings.Replace(strings.Split(strings.Split(string(versionData), "\n")[4], ",")[0], "\"", "", -1)
 
-	_, err = os.Stat("lastHash.txt")
-	if err == nil {
-		lastHash, _ := os.ReadFile("lastHash.txt")
-		if string(lastHash) == latestVersion {
-			log.Println("No new NSRL files")
-			goto UnzipStage
+		_, err = os.Stat("lastHash.txt")
+		if err == nil {
+			lastHash, _ := os.ReadFile("lastHash.txt")
+			if string(lastHash) == latestVersion {
+				log.Println("No new NSRL files")
+				goto UnzipStage
+			} else {
+				newLink = true
+				log.Println("New NSRL files found")
+				f, _ := os.OpenFile("lastHash.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+				f.WriteString(latestVersion)
+			}
 		} else {
-			newLink = true
-			log.Println("New NSRL files found")
+			log.Println("First Time Run")
 			f, _ := os.OpenFile("lastHash.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 			f.WriteString(latestVersion)
 		}
-	} else {
-		log.Println("First Time Run")
-		f, _ := os.OpenFile("lastHash.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
-		f.WriteString(latestVersion)
 	}
 UnzipStage:
 	_, err = os.Stat("rds_modernm/rds_modernm/NSRLFile.txt")
